@@ -10,11 +10,39 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_12_20_203431) do
+ActiveRecord::Schema.define(version: 2020_12_21_065109) do
+
+  create_table "favoritelists", force: :cascade do |t|
+    t.string "city"
+    t.string "address"
+    t.string "name"
+    t.string "state"
+    t.string "country"
+    t.string "description"
+    t.string "website"
+    t.string "phoneNum"
+    t.integer "user_id"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "username"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "wishlists", force: :cascade do |t|
+    t.string "city"
+    t.string "address"
+    t.string "name"
+    t.string "state"
+    t.string "country"
+    t.string "description"
+    t.string "website"
+    t.string "phoneNum"
+    t.integer "user_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end
