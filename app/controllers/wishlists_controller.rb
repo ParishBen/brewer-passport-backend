@@ -22,11 +22,11 @@ class WishlistsController < ApplicationController
         
             wishlist = Wishlist.new(wishlist_params)
             wishlist.user_id = User.find_by(username: params[:username]).id
-             
-            if wishlist.save
-            
+            user =  User.find_by(username: params[:username])
+            if !user.wishlists.find_by(name: params[:name])
+            wishlist.save
             render json: wishlist
-            else byebug
+            
         
       end
     end
