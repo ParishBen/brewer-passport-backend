@@ -1,24 +1,23 @@
 class WishlistsController < ApplicationController
 
     def index
-        render json: Wishlist.all
+        user = User.find_by(username: params[:id])
+        if user
+        render json: user.wishlists.all
+        else 
+            render json: Wishlist.all
     end
+end
 
-    # def create
-    #     user = User.new(user_params)
-    #     if user.save
-    #         render json: user
-    #         byebug
-    #     end
+ 
+    # def show
+    #     wishlist = Wishlist.find_by(user_id: params[:user_id])
+    #     render json: wishlist
+    #     byebug
     # end
-    def show
-        wishlist = Wishlist.find_by(user_id: params[:user_id])
-        render json: wishlist
-        byebug
-    end
 
     def create
-        #wishlist = Wishlist.find_by(username: params[:username])
+        
         
             wishlist = Wishlist.new(wishlist_params)
             wishlist.user_id = User.find_by(username: params[:username]).id
@@ -32,10 +31,10 @@ class WishlistsController < ApplicationController
     end
 
 
-    def destroy
+    # def destroy
         
-        byebug
-    end
+    #     byebug
+    # end
     
     private
    
