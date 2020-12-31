@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
- get '/wishlists/:id', to: 'wishlists#index'
+ get '/wishlists/:username', to: 'wishlists#index'
+ delete '/wishlists/:username/:name', to: 'wishlists#destroy'
   resources :favoritelists
   resources :wishlists
   resources :breweries
