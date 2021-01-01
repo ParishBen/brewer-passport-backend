@@ -28,6 +28,7 @@ class FavoritelistsController < ApplicationController
     
     
         def destroy
+            
             user =  User.find_by(username: params[:username])
             brewery = user.favoritelists.find_by(name: params[:name])
             brewery.destroy
