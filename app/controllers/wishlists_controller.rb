@@ -33,17 +33,13 @@ end
 
     def destroy
         user =  User.find_by(username: params[:username])
-        wishlist = user.wishlists
         brewery = user.wishlists.find_by(name: params[:name])
-        if params[:name].split(' ').include?("&")
-            newname = params[:name].gsub('&', '\&')
-            brewery = user.wishlists.find_by(name: newname)
+        
             #byebug
         brewery.destroy
         
-        end
-        brewery.destroy
     end
+       
     
     private
    
