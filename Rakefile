@@ -3,4 +3,8 @@
 
 require_relative 'config/application'
 
+def console 
+    Pry.start
+end
+
 Rails.application.load_tasks

@@ -12,20 +12,39 @@ class UsersController < ApplicationController
     # end
 
     def create
-        user = User.find_by(username: params[:username])
+      user = User.find_by(username: params[:username])
         if user
+            token_user = generate_token({id: user.id})
+            resp_token = { 
+                user: user_serializer(user),
+                jwt: token_user
+                }
             session[:user_id] = user.id
-            render json: user
+            #byebug
+            render json: {token: resp_token}
             
-        else 
-            user = User.new(user_params)
-            if user.save
-            session[:user_id] = user.id
-            render json: user
-            
+        elsif 
+            @user = User.new(user_params)
+              if @user.save
+                token_user = generate_token({id: @user.id})   
+                session[:user_id] = user.id
+                #window.localStorage.setItem('current_user': token_user)
+                resp_token = { 
+                    user: user_serializer(@user),
+                    jwt: token_user
+                  }
+                #byebug
+                render json: {token: resp_token}
+                #byebug
+            else 
+                resp = {
+                    error: "Cannot create User"
+                }
+                render json: resp
+            end
+          end
         end
-      end
-    end
+    
 
 
     # def destroy
@@ -37,13 +56,5 @@ class UsersController < ApplicationController
    
     def user_params 
         params.require(:user).permit(:name, :username)
-    end
-
-    def logged_in?
-        !!session[:user_id]
-    end
-
-    def current_user
-        User.find_by(id: session[:user_id])
     end
 end

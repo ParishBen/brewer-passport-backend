@@ -3,10 +3,12 @@ class WishlistsController < ApplicationController
     def index
         user = User.find_by(username: params[:username])
         if user
-        render json: user.wishlists.all
-        else 
-            render json: Wishlist.all
-    end
+            
+        render json: user.wishlists.all.to_json
+    #     else 
+    #         render json: Wishlist.all.to_json
+    
+     end
 end
 
  
@@ -22,20 +24,29 @@ end
             wishlist = Wishlist.new(wishlist_params)
             user =  User.find_by(username: params[:username])
             wishlist.user_id = user.id
+            # if !current_user
+            #     session[:user_id] = user.id
             if !user.wishlists.find_by(name: params[:name])
             wishlist.save
-            render json: wishlist
             
-        
+            render json: wishlist.to_json
+            else 
+                resp = {
+                    error: "#{params[:name]} is already in Wishlist!",
+                    details: wishlist.errors.full_messages
+                    }
+                render json: resp, status: :unauthorized
+            
+         end
       end
-    end
+    #end
 
 
     def destroy
         user =  User.find_by(username: params[:username])
         brewery = user.wishlists.find_by(name: params[:name])
         
-            #byebug
+            
         brewery.destroy
         
     end
@@ -51,8 +62,8 @@ end
         !!session[:user_id]
     end
 
-    def current_user
-        User.find_by(id: session[:user_id])
-    end
+    # def current_user
+    #     User.find_by(id: session[:user_id])
+    # end
 
 end

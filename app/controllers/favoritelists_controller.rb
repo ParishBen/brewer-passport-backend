@@ -3,10 +3,10 @@ class FavoritelistsController < ApplicationController
 
         def index
             user = User.find_by(username: params[:username])
-            if user
-            render json: user.favoritelists.all
-            else 
-                render json: Favoritelist.all
+            if user      
+            render json: user.favoritelists.all.to_json
+            # else 
+            #     render json: Favoritelist.all.to_json
         end
     end
     
@@ -18,19 +18,21 @@ class FavoritelistsController < ApplicationController
                 favoritelist = Favoritelist.new(favoritelist_params)
                 user =  User.find_by(username: params[:username])
                 favoritelist.user_id = user.id
+                # if !current_user
+                #     session[:user_id] = user.id
                 if !user.favoritelists.find_by(name: params[:name])
                 favoritelist.save
-                render json: favoritelist
-                
-            
+                render json: favoritelist.to_json
+            end
           end
-        end
+        #end
     
     
         def destroy
             
             user =  User.find_by(username: params[:username])
             brewery = user.favoritelists.find_by(name: params[:name])
+            
             brewery.destroy
             
          end
@@ -46,9 +48,9 @@ class FavoritelistsController < ApplicationController
             !!session[:user_id]
         end
     
-        def current_user
-            User.find_by(id: session[:user_id])
-        end
+        # def current_user
+        #     User.find_by(id: session[:user_id])
+        # end
     
     
     
