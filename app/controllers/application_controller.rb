@@ -3,13 +3,16 @@ class ApplicationController < ActionController::API
 #   include ActionController::RequestForgeryProtection
 #   protect_from_forgery with: :exception
 
+
 include ActionController::Serialization
     def logged_in?
-        session[:user_id] || User.find_by(id: JWT.decode(request.headers["Authorization"],'dingding')[0]["id"])
+        
+         User.find_by(id: JWT.decode(request.headers["Authorization"], jwt_secret)[0]["id"])
+        byebug
      end
 
     def decode_token_for_user_id(token_info)
-        User.find_by(id: JWT.decode(token_info,'dingding')[0]["id"])
+        User.find_by(id: JWT.decode(token_info, jwt_secret)[0]["id"])
        # byebug #request.headers["Authorization"]
     end
 
@@ -26,12 +29,14 @@ include ActionController::Serialization
     end
 
     def generate_token(info)
-        JWT.encode(info, "dingding")
+        JWT.encode(info, jwt_secret)
     end
 
 
     def grab_current_user
-        if logged_in?
+        
+        if User.find_by(id: JWT.decode(request.headers["Authorization"], 'dingdingers')[0]["id"])
+            byebug
             render json: {
               user: user_serializer(decode_token_for_user_id(request.headers["Authorization"]))
              }, status: :ok
@@ -39,4 +44,9 @@ include ActionController::Serialization
              render json: {error: "No current user"}
          end
     end
+    private
+
+        def jwt_secret
+             return 'dingdingers'
+        end 
 end
