@@ -7,12 +7,12 @@ class ApplicationController < ActionController::API
 include ActionController::Serialization
     def logged_in?
         
-         User.find_by(id: JWT.decode(request.headers["Authorization"], jwt_secret)[0]["id"])
+         User.find_by(id: JWT.decode(request.headers["Authorization"],JWT_SECRET)[0]["id"])
         byebug
      end
 
     def decode_token_for_user_id(token_info)
-        User.find_by(id: JWT.decode(token_info, jwt_secret)[0]["id"])
+        User.find_by(id: JWT.decode(token_info,JWT_SECRET)[0]["id"])
        # byebug #request.headers["Authorization"]
     end
 
@@ -29,24 +29,42 @@ include ActionController::Serialization
     end
 
     def generate_token(info)
-        JWT.encode(info, jwt_secret)
+        JWT.encode(info,JWT_SECRET)
     end
 
+    def grab_session_user
+        user = User.find_by(id: session[:user_id])
+        byebug
+        if user
+            render json: {
+                user: user_serializer(user)
+            }
+        else 
+            render json: {
+                error: "NO CURRENT SESSION"
+            }
+        end
+    end
+
+    def logout
+        byebug
+        session.delete(:user_id)
+        #reset_session
+        render json: {text: "just cleared session"}
+    end
 
     def grab_current_user
-        
-        if User.find_by(id: JWT.decode(request.headers["Authorization"], 'dingdingers')[0]["id"])
+        user = User.find_by(id: JWT.decode(request.headers["Authorization"],JWT_SECRET)[0]["id"])
+        if user
+            #session[:user_id] = user.id
             byebug
             render json: {
               user: user_serializer(decode_token_for_user_id(request.headers["Authorization"]))
              }, status: :ok
          else
+            
              render json: {error: "No current user"}
          end
     end
-    private
-
-        def jwt_secret
-             return 'dingdingers'
-        end 
+    
 end

@@ -1,6 +1,7 @@
 class WishlistsController < ApplicationController
 
     def index
+        byebug
         user = User.find_by(username: params[:username])
         if user
             

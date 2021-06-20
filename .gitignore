@@ -32,3 +32,4 @@
 /config/master.key
 /app/secret.rb
 .env
+/config/initializers/constant.rb

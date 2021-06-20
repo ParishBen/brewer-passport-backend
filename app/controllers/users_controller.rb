@@ -12,6 +12,7 @@ class UsersController < ApplicationController
     # end
 
     def create
+        
       user = User.find_by(username: params[:username])
         if user
             token_user = generate_token({id: user.id})
@@ -20,7 +21,7 @@ class UsersController < ApplicationController
                 jwt: token_user
                 }
             session[:user_id] = user.id
-            #byebug
+            byebug
             render json: {token: resp_token}
             
         elsif 
@@ -33,7 +34,7 @@ class UsersController < ApplicationController
                     user: user_serializer(@user),
                     jwt: token_user
                   }
-                #byebug
+                byebug
                 render json: {token: resp_token}
                 #byebug
             else 
