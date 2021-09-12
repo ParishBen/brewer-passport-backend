@@ -23,6 +23,13 @@ class FavoritelistsController < ApplicationController
                 if !user.favoritelists.find_by(name: params[:name])
                 favoritelist.save
                 render json: favoritelist.to_json
+            else 
+                resp = {
+                    error: "#{params[:name]} is already in Favorites!"
+                    }
+                render json: resp, status: :unauthorized
+            
+         
             end
           end
         #end

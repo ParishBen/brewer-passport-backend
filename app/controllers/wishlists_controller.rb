@@ -1,7 +1,7 @@
 class WishlistsController < ApplicationController
 
     def index
-        byebug
+        
         user = User.find_by(username: params[:username])
         if user
             
@@ -33,8 +33,7 @@ end
             render json: wishlist.to_json
             else 
                 resp = {
-                    error: "#{params[:name]} is already in Wishlist!",
-                    details: wishlist.errors.full_messages
+                    error: "#{params[:name]} is already in Wishlist!"
                     }
                 render json: resp, status: :unauthorized
             

@@ -8,12 +8,11 @@ include ActionController::Serialization
     def logged_in?
         
          User.find_by(id: JWT.decode(request.headers["Authorization"],JWT_SECRET)[0]["id"])
-        byebug
+        #byebug 
      end
 
     def decode_token_for_user_id(token_info)
         User.find_by(id: JWT.decode(token_info,JWT_SECRET)[0]["id"])
-       # byebug #request.headers["Authorization"]
     end
 
     # def currenten_user
@@ -23,8 +22,8 @@ include ActionController::Serialization
     def user_serializer(user)
         
            {name: user.name,
-            username: user.username,
-            id: user.id}
+            username: user.username
+            }
         
     end
 
@@ -32,9 +31,8 @@ include ActionController::Serialization
         JWT.encode(info,JWT_SECRET)
     end
 
-    def grab_session_user
+    def self.grab_session_user
         user = User.find_by(id: session[:user_id])
-        byebug
         if user
             render json: {
                 user: user_serializer(user)
@@ -47,17 +45,13 @@ include ActionController::Serialization
     end
 
     def logout
-        byebug
         session.delete(:user_id)
-        #reset_session
         render json: {text: "just cleared session"}
     end
 
     def grab_current_user
-        user = User.find_by(id: JWT.decode(request.headers["Authorization"],JWT_SECRET)[0]["id"])
+        user = decode_token_for_user_id(request.headers["Authorization"])
         if user
-            #session[:user_id] = user.id
-            byebug
             render json: {
               user: user_serializer(decode_token_for_user_id(request.headers["Authorization"]))
              }, status: :ok

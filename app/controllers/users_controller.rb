@@ -21,14 +21,15 @@ class UsersController < ApplicationController
                 jwt: token_user
                 }
             session[:user_id] = user.id
-            byebug
+            #byebug
             render json: {token: resp_token}
             
         elsif 
             @user = User.new(user_params)
               if @user.save
+                byebug
                 token_user = generate_token({id: @user.id})   
-                session[:user_id] = user.id
+                session[:user_id] = @user.id
                 #window.localStorage.setItem('current_user': token_user)
                 resp_token = { 
                     user: user_serializer(@user),
