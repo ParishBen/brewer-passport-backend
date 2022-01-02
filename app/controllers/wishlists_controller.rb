@@ -13,11 +13,16 @@ class WishlistsController < ApplicationController
 end
 
  
-    # def show
-    #     wishlist = Wishlist.find_by(user_id: params[:user_id])
-    #     render json: wishlist
-    #     byebug
-    # end
+    def show
+        #byebug
+        user = User.find_by(username: request.headers["Authorization"])
+        wishlist = user.wishlists.find_by(name: params[:name])
+        resp = {
+            brewery: wishlist
+        }
+        render json: resp
+        #byebug
+    end
 
     def create
         

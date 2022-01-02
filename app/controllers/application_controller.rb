@@ -21,7 +21,8 @@ include ActionController::Serialization
 
     def user_serializer(user)
         
-           {name: user.name,
+           {
+            name: user.name,
             username: user.username
             }
         
@@ -52,9 +53,11 @@ include ActionController::Serialization
     def grab_current_user
         user = decode_token_for_user_id(request.headers["Authorization"])
         if user
+            
             render json: {
               user: user_serializer(decode_token_for_user_id(request.headers["Authorization"]))
              }, status: :ok
+             
          else
             
              render json: {error: "No current user"}

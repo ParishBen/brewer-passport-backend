@@ -27,7 +27,7 @@ class UsersController < ApplicationController
         elsif 
             @user = User.new(user_params)
               if @user.save
-                byebug
+                #byebug
                 token_user = generate_token({id: @user.id})   
                 session[:user_id] = @user.id
                 #window.localStorage.setItem('current_user': token_user)
@@ -35,7 +35,7 @@ class UsersController < ApplicationController
                     user: user_serializer(@user),
                     jwt: token_user
                   }
-                byebug
+                #byebug
                 render json: {token: resp_token}
                 #byebug
             else 
